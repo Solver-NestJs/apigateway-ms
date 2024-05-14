@@ -24,7 +24,11 @@ export class OrdersController {
 
   @Post()
   create(@Body() createOrderDto: CreateOrderDto) {
-    return this.client.send('createOrder', createOrderDto);
+    return this.client.send('createOrder', createOrderDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Get()
@@ -41,19 +45,33 @@ export class OrdersController {
     @Param() status: StatusDto,
     @Query() paginationDto: PaginationDto,
   ) {
-    return this.client.send('findAllOrders', {
-      ...paginationDto,
-      ...status,
-    });
+    return this.client
+      .send('findAllOrders', {
+        ...paginationDto,
+        ...status,
+      })
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
   }
 
   @Get('id/:id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.client.send('findOneOrder', { id });
+    return this.client.send('findOneOrder', { id }).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Patch(':id')
   update(@Param('id', ParseUUIDPipe) id: string, @Body() statusDto: StatusDto) {
-    return this.client.send('changeStatusOrder', { ...statusDto, id });
+    return this.client.send('changeStatusOrder', { ...statusDto, id }).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 }

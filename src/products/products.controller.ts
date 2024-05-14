@@ -29,11 +29,21 @@ export class ProductsController {
         throw new RpcException(error);
       }),
     );
+    // console.log(new Date());
+    // return this.client.send('createproduct', new Date()).pipe(
+    //   catchError((error) => {
+    //     throw new RpcException(error);
+    //   }),
+    // );
   }
 
   @Get()
   findAll(@Query() paginationdto: PaginationDto) {
-    return this.client.send({ cmd: 'find-all' }, paginationdto);
+    return this.client.send({ cmd: 'find-all' }, paginationdto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Get(':id')
