@@ -16,6 +16,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  logger.log(`gateway - Primer cambio`);
 
   await app.listen(envs.port);
   logger.log(`Gateway running on port ${envs.port}`);
