@@ -19,7 +19,6 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      console.log('sss');
       const { user, token: newToken } = await firstValueFrom(
         this.client.send('user.verify', { token }),
       );
