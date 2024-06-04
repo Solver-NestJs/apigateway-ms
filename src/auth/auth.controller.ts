@@ -1,24 +1,43 @@
-import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Inject,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { catchError } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 import { NATS_SERVICE } from 'src/config/services';
 import { LoginDto, RegisterDto } from './dto';
 
 import { AuthGuard } from 'src/common/guard/auth.guards';
 
 import { Token, User } from 'src/common/decorators';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.client.send('user.login', loginDto).pipe(
-      catchError((error) => {
-        throw new RpcException(error);
-      }),
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { token, user } = await firstValueFrom(
+      this.client.send('user.login', loginDto).pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      ),
     );
+
+    response.cookie('jwt', token, { httpOnly: true });
+
+    return response.status(HttpStatus.OK).json(user);
   }
 
   @Post('register')
@@ -44,12 +63,5 @@ export class AuthController {
   @UseGuards(AuthGuard)
   verify(@User() user: any, @Token() token: string) {
     return { user, token };
-
-    //console.log(resquest['token']);
-    // return this.client.send('user.verify', {}).pipe(
-    //   catchError((error) => {
-    //     throw new RpcException(error);
-    //   }),
-    // );
   }
 }

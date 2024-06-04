@@ -13,7 +13,10 @@ export class AuthGuard implements CanActivate {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+
     const token = this.extractJwtHeader(request);
+    //const token = this.extractJwtFromCookies(request);
+
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
@@ -35,5 +38,10 @@ export class AuthGuard implements CanActivate {
   extractJwtHeader = (request: Request) => {
     const [type, token] = request.headers['authorization']?.split(' ');
     return type === 'Bearer' ? token : undefined;
+  };
+
+  extractJwtFromCookies = (request: Request) => {
+    const token = request.cookies['jwt'];
+    return token;
   };
 }
