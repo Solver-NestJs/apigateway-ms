@@ -26,14 +26,10 @@ jobs:
           echo "Iniciando el proceso de login en Docker Hub"
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           echo "Finalizando el proceso de login en Docker Hub"
-      - name: Build docker Image
-        env:
-          NEW_VERSION: 0.0.2
+      - name: Build docker Image        
         run: |
-          docker build -t dockerwallas/nestjs-repository:0.0.2
-      - name: Push Docker Image
-        env:
-          NEW_VERSION: 0.0.2
+          docker build --file dockerfile.prod --tag dockerwallas/nestjs-repository:0.0.2 .
+      - name: Push Docker Image        
         run: |
           docker push dockerwallas/nestjs-repository:0.0.2
           
