@@ -30,12 +30,12 @@ jobs:
         env:
           NEW_VERSION: 0.0.2
         run: |
-          docker build -t dockerwallas/gatewayprod:0.0.2
+          docker build -t dockerwallas/nestjs-repository:0.0.2
       - name: Push Docker Image
         env:
           NEW_VERSION: 0.0.2
         run: |
-          docker push dockerwallas/gatewayprod:0.0.2
+          docker push dockerwallas/nestjs-repository:0.0.2
           
       
     
