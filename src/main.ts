@@ -20,6 +20,7 @@ async function bootstrap() {
     }),
   );
 
+  logger.log(`Correccion v1!!`);
   await app.listen(envs.port);
   logger.log(`Gateway running on port ${envs.port}`);
 }
