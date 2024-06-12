@@ -20,7 +20,7 @@ async function bootstrap() {
     }),
   );
 
-  logger.log(`Correccion v1!!`);
+  logger.log(`Correccion v3!! Para K8s lanzado desde githubactions`);
   await app.listen(envs.port);
   logger.log(`Gateway running on port ${envs.port}`);
 }
