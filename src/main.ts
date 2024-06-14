@@ -20,6 +20,8 @@ async function bootstrap() {
     }),
   );
 
+  logger.log(`Este es el cambio que se hizo en el archivo main.ts `);
+
   await app.listen(envs.port);
   logger.log(`Gateway running on port ${envs.port}`);
 }
